@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHOCO2.0</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>CHOCO2.0</h1>
+            <p>Bienvenidos a su página Choco2.0, donde puedes descargar y compartir tus videos favoritos.</p>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <nav>
+                <a href="otr.html" class="button">Enter</a>
+            </nav>
+
+            <section class="video-section">
+                <h2>Disfruta Este Video</h2>
+
+                <!-- Video Upload Section -->
+                <h3>Sube tu Video</h3>
+                <form action="/upload-video" method="POST" enctype="multipart/form-data">
+                    <label for="videoFile">Selecciona un video para subir:</label>
+                    <input type="file" id="videoFile" name="videoFile" accept="video/*" required>
+                    <button type="submit">Subir Video</button>
+                </form>
+
+                <!-- Display Videos -->
+                <h3>Videos Disponibles</h3>
+                <div class="video-container">
+                    <div class="video-item">
+                        <h4>Video 1</h4>
+                        <video src="ssea.mp4" controls width="300px"></video>
+                        <div class="reactions">
+                            <button class="like-btn" onclick="increaseLike('video1')">👍 Like</button>
+                            <button class="dislike-btn" onclick="increaseDislike('video1')">👎 Dislike</button>
+                            <p id="video1-likes">Likes: 0</p>
+                            <p id="video1-dislikes">Dislikes: 0</p>
+                        </div>
+                        <a href="ssea.mp4" download="video1.mp4">Descargar Video</a>
+                    </div>
+
+                    <div class="video-item">
+                        <h4>Video 2</h4>
+                        <video src="rtt.mp4" controls width="300px"></video>
+                        <div class="reactions">
+                            <button class="like-btn" onclick="increaseLike('video2')">👍 Like</button>
+                            <button class="dislike-btn" onclick="increaseDislike('video2')">👎 Dislike</button>
+                            <p id="video2-likes">Likes: 0</p>
+                            <p id="video2-dislikes">Dislikes: 0</p>
+                        </div>
+                        <a href="rtt.mp4" download="video2.mp4">Descargar Video</a>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 My Professional Page | Todos los derechos reservados.</p>
+            <p>&copy; Lewisalexandercordoba@gmail.com | Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Script to handle reactions -->
+    <script>
+        let likes = {
+            video1: 0,
+            video2: 0
+        };
+
+        let dislikes = {
+            video1: 0,
+            video2: 0
+        };
+
+        function increaseLike(videoId) {
+            likes[videoId]++;
+            document.getElementById(videoId + '-likes').innerText = 'Likes: ' + likes[videoId];
+            document.querySelector(`#${videoId} .like-btn`).disabled = true;
+        }
+
+        function increaseDislike(videoId) {
+            dislikes[videoId]++;
+            document.getElementById(videoId + '-dislikes').innerText = 'Dislikes: ' + dislikes[videoId];
+            document.querySelector(`#${videoId} .dislike-btn`).disabled = true;
+        }
+    </script>
+</body>
+</html>

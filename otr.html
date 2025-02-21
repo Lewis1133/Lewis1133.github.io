@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Professional Page</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>CHOCO2.0</h1>
+            <p>Bienvenidos a su página Choco2.0, donde puedes descargar, compartir videos y reaccionar a ellos.</p>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <nav>
+                <a href="otr.html" class="button">Enter</a>
+            </nav>
+
+            <section class="video-section">
+                <h2>Sube y Reacciona a Videos</h2>
+
+                <!-- Video Upload Section -->
+                <h3>Sube tu Video</h3>
+                <form id="video-upload-form" action="javascript:void(0);" method="POST" enctype="multipart/form-data">
+                    <label for="videoFile">Selecciona un video para subir:</label>
+                    <input type="file" id="videoFile" name="videoFile" accept="video/*" required>
+                    <button type="submit">Subir Video</button>
+                </form>
+
+                <!-- Display Videos -->
+                <h3>Videos Disponibles</h3>
+                <div id="video-list" class="video-container">
+                    <!-- New videos will appear here -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 My Professional Page | Todos los derechos reservados.</p>
+            <p>&copy; Lewisalexandercordoba@gmail.com | Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Script to handle reactions and video uploads -->
+    <script>
+        let videos = []; // Array to store uploaded videos
+
+        // Function to add a new video to the page
+        function addVideo(videoFile) {
+            const videoId = 'video-' + videos.length; // Unique ID for each video
+            const videoURL = URL.createObjectURL(videoFile); // Create a URL for the video file
+
+            // Create video item element
+            const videoItem = document.createElement('div');
+            videoItem.classList.add('video-item');
+            videoItem.setAttribute('id', videoId);
+
+            // Set up video item HTML
+            videoItem.innerHTML = `
+                <h4>Video ${videos.length + 1}</h4>
+                <video src="${videoURL}" controls width="100%"></video>
+                <div class="reactions">
+                    <button class="like-btn" onclick="increaseLike('${videoId}')">👍 Like</button>
+                    <button class="dislike-btn" onclick="increaseDislike('${videoId}')">👎 Dislike</button>
+                    <button class="undo-btn" onclick="undoReaction('${videoId}')">↩ Undo</button>
+                    <p id="${videoId}-likes">Likes: 0</p>
+                    <p id="${videoId}-dislikes">Dislikes: 0</p>
+                </div>
+                <a href="${videoURL}" download="${videoFile.name}">Descargar Video</a>
+            `;
+
+            // Add the new video item to the top of the list (most recent first)
+            const videoList = document.getElementById('video-list');
+            videoList.insertBefore(videoItem, videoList.firstChild);
+
+            // Store video details in the array
+            videos.push({ id: videoId, likes: 0, dislikes: 0, likeClicked: false, dislikeClicked: false });
+        }
+
+        // Increment the like count for a specific video
+        function increaseLike(videoId) {
+            const video = videos.find(v => v.id === videoId);
+            if (!video.likeClicked) {
+                video.likes++;
+                video.likeClicked = true; // Mark as clicked
+                document.getElementById(videoId + '-likes').innerText = 'Likes: ' + video.likes;
+                document.querySelector(`#${videoId} .like-btn`).disabled = true;
+            }
+        }
+
+        // Increment the dislike count for a specific video
+        function increaseDislike(videoId) {
+            const video = videos.find(v => v.id === videoId);
+            if (!video.dislikeClicked) {
+                video.dislikes++;
+                video.dislikeClicked = true; // Mark as clicked
+                document.getElementById(videoId + '-dislikes').innerText = 'Dislikes: ' + video.dislikes;
+                document.querySelector(`#${videoId} .dislike-btn`).disabled = true;
+            }
+        }
+
+        // Undo a reaction (either like or dislike)
+        function undoReaction(videoId) {
+            const video = videos.find(v => v.id === videoId);
+            if (video.likeClicked || video.dislikeClicked) {
+                // If like was clicked, undo like
+                if (video.likeClicked) {
+                    video.likes--;
+                    document.getElementById(videoId + '-likes').innerText = 'Likes: ' + video.likes;
+                    document.querySelector(`#${videoId} .like-btn`).disabled = false;
+                }
+
+                // If dislike was clicked, undo dislike
+                if (video.dislikeClicked) {
+                    video.dislikes--;
+                    document.getElementById(videoId + '-dislikes').innerText = 'Dislikes: ' + video.dislikes;
+                    document.querySelector(`#${videoId} .dislike-btn`).disabled = false;
+                }
+
+                // Reset the clicked flags
+                video.likeClicked = false;
+                video.dislikeClicked = false;
+            }
+        }
+
+        // Handle video upload form submission
+        document.getElementById('video-upload-form').addEventListener('submit', function (e) {
+            const videoFile = document.getElementById('videoFile').files[0];
+            if (videoFile) {
+                addVideo(videoFile);
+                document.getElementById('videoFile').value = ''; // Clear the file input after upload
+            }
+        });
+    </script>
+</body>
+</html>
